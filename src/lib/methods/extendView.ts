@@ -1,0 +1,4 @@
+const extendView = () => {};
+
+export { extendView };
+

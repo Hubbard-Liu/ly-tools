@@ -1,0 +1,3 @@
+const extendComponent = () => {};
+
+export { extendComponent };
