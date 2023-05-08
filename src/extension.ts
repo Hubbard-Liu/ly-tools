@@ -1,8 +1,8 @@
 /*
  * @Author: Do not edit
  * @Date: 2023-05-05 23:06:52
- * @LastEditors: LiuYu
- * @LastEditTime: 2023-05-08 00:38:26
+ * @LastEditors: Liuyu
+ * @LastEditTime: 2023-05-08 19:21:19
  * @FilePath: /ly-tools/src/extension.ts
  */
 import * as vscode from 'vscode';
@@ -18,7 +18,6 @@ export function activate(context: vscode.ExtensionContext) {
 		quickPick.items = quickPickItem;
 		quickPick.placeholder = '请选择继承类型';
 		quickPick.onDidChangeSelection(selection => {
-			console.log('selection', selection[0]);
 			const { code } = selection[0] as PickItem;
 			multiStepInput(context, code);
 		});
