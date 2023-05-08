@@ -1,8 +1,8 @@
 /*
  * @Author: Do not edit
  * @Date: 2023-05-07 23:58:43
- * @LastEditors: Liuyu
- * @LastEditTime: 2023-05-08 19:54:44
+ * @LastEditors: LiuYu
+ * @LastEditTime: 2023-05-09 00:28:28
  * @FilePath: /ly-tools/src/lib/multiStepInput.ts
  */
 import { ExtensionContext, window, QuickPickItem, Disposable, QuickInput} from 'vscode';
@@ -12,13 +12,7 @@ async function multiStepInput(context: ExtensionContext, methods: string){
   const input = new MultiStepInput();
   switch(methods){
     case 'extendView':
-      await input.showQuickPick({
-        title: '继承view',
-        step: 1,
-        totalSteps: 1,
-        placeholder: '请输入view名称',
-        items: [],
-      });
+      extendView(input);
       break;
     case 'extendComponent':
       extendComponent();
@@ -35,31 +29,37 @@ interface QuickPickParameters<T extends QuickPickItem> {
 	title: string;
 	step: number;
 	totalSteps: number;
-	items: T[];
+	items?: T[];
+	activeItems?: T[];
 	activeItem?: T;
 	ignoreFocusOut?: boolean;
 	placeholder: string;
+  onChangeValue?: Function;
 }
 
 class MultiStepInput {
-
 	private current?: QuickInput;
-	private steps: number = 0;
+	// private steps: QuickInput[];
 
-	async showQuickPick<T extends QuickPickItem, P extends QuickPickParameters<T>>({ title, step, totalSteps, items, placeholder }: P) {
+	async showQuickPick<T extends QuickPickItem, P extends QuickPickParameters<T>>({ title, step, totalSteps, items, activeItems, placeholder, onChangeValue }: P) {
 		const disposables: Disposable[] = [];
 		try {
-			return await new Promise<T | (P extends { buttons: (infer I)[] } ? I : never)>((resolve, reject) => {
+			return await new Promise<T>((resolve, reject) => {
 				const input = window.createQuickPick<T>();
 				input.title = title;
 				input.step = step;
 				input.totalSteps = totalSteps;
 				input.placeholder = placeholder;
-				input.items = items;
+				input.items = items || [];
+				input.activeItems = activeItems || [];
 
 				disposables.push(
 					input.onDidChangeSelection(items => {
+            input.hide();
             return resolve(items[0]);
+          }),
+          input.onDidChangeValue(items => {
+            onChangeValue && onChangeValue(items);
           }),
 				);
 				if (this.current) {
@@ -77,4 +77,5 @@ class MultiStepInput {
 
 export {
   multiStepInput,
+  MultiStepInput,
 };
