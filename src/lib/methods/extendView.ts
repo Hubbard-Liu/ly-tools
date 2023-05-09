@@ -107,9 +107,6 @@ const extendView = async (input: MultiStepInput) => {
   function onChangeValue(value: string){
     console.log('value', value);
     if (value === '') {return;}
-    // const reg = new RegExp(value + EXTENSION_NAME_REG + '$');
-    // const fileList = findFiles(modulesPath + sep + PACKAGE_PATH.join(sep), reg);
-    // items = fileList.map(path => ({ label: path, description: path }));
   }
 
 
