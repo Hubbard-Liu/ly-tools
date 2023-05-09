@@ -5,8 +5,10 @@ import type { QuickPickItem } from 'vscode';
 import type { MultiStepInput } from '../multiStepInput';
 
 const NODE_MODULES = 'node_modules';
-const PACKAGE_PATH = ['acorn', 'dist'];
-const EXTENSION_NAME_REG = '.js';
+const PACKAGE_PATH = ['@zfs'];
+const EXCLUDE_PATH = ['ui', 'element-ui', 'el-bigdata-table', 'boe-ia'];
+const EXTENSION_NAME_REG = '.vue';
+const MODULES_REG = /(?<=node_modules\/)(\D|\w|\/)*/g;
 
 const extendView = async (input: MultiStepInput) => {
   // 1.fsPath
@@ -40,55 +42,57 @@ const extendView = async (input: MultiStepInput) => {
 
   // 5.find package path
   // 查找指定文件夹下的文件路径
-  const findFiles: (dir:string, filter: RegExp) => string[] = (dir, filter) => {
-    let results: string[] = [];
+  // const findFiles: (dir:string, filter: RegExp) => string[] = (dir, filter) => {
+  //   let results: string[] = [];
 
-    fs.readdirSync(dir).forEach((file) => {
-        file = join(dir, file);
-        let stat = fs.statSync(file);
+  //   fs.readdirSync(dir).forEach((file) => {
+  //       file = join(dir, file);
+  //       let stat = fs.statSync(file);
 
-        if (stat && stat.isDirectory()) {
-          results = [ ...results, ...findFiles(file, filter)];
-        } else {
-          if (filter.test(file)) {
-            results.push(file);
-          }
-        }
-      });
+  //       if (stat && stat.isDirectory()) {
+  //         results = [ ...results, ...findFiles(file, filter)];
+  //       } else {
+  //         if (filter.test(file)) {
+  //           results.push(file);
+  //         }
+  //       }
+  //     });
 
-      return results;
-  };
-
-  // const findFilesInDir: (startPath:string, filter: RegExp) => QuickPickItem[] | [] = (startPath, filter) => {
-  //   if (!fs.existsSync(startPath)) {
-  //     console.log("no dir ", startPath);
-  //     return [];
-  //   }
-  
-  //   let files = fs.readdirSync(startPath);
-  //   let result: QuickPickItem[] = [];
-  
-  //   for (let i = 0; i < files.length; i++) {
-  //     let filename = join(startPath, files[i]);
-  //     let stat = fs.lstatSync(filename);
-  
-  //     if (stat.isDirectory()) {
-  //       result = [ ...result, ...findFilesInDir(filename, filter)];
-  //     } else if (filename.indexOf(filter) >= 0) {
-  //       result.push({ label: files[i], description: filename });
-  //     }
-  //   }
-  
-  //   return result;
+  //     return results;
   // };
-  
-  let files = findFilesInDir('指定路径', /匹配正则/);
 
+  const findFilesInDir: (startPath:string, filter: RegExp) => QuickPickItem[] | [] = (startPath, filter) => {
+    if (!fs.existsSync(startPath)) {
+      console.log("no dir ", startPath);
+      return [];
+    }
+  
+    let files = fs.readdirSync(startPath);
+    let result: QuickPickItem[] = [];
+  
+    for (let i = 0; i < files.length; i++) {
+      if (EXCLUDE_PATH.includes(files[i])) {
+        continue;
+      };
+      let filename = join(startPath, files[i]);
+      let stat = fs.lstatSync(filename);
+  
+      if (stat.isDirectory()) {
+        result = [ ...result, ...findFilesInDir(filename, filter)];
+      } else if (filter.test(filename)) {
+        const detail = filename.match(MODULES_REG)![0];
+        result.push({ label: files[i], detail });
+      }
+    }
+  
+    return result;
+  };
+  
   // 先去找目录再去显示
   const reg = new RegExp(EXTENSION_NAME_REG + '$');
-  const fileList = findFiles(modulesPath + sep + PACKAGE_PATH.join(sep), reg);
-  console.log(fileList);
-  let items: QuickPickItem[] = fileList.map(path => ({ label: path, description: path }));
+  console.log(modulesPath + sep + PACKAGE_PATH.join(sep));
+  const fileList = findFilesInDir(modulesPath + sep + PACKAGE_PATH.join(sep), reg);
+  let items: QuickPickItem[] = fileList;
 
   const result = await input.showQuickPick({
     title: '继承view',
