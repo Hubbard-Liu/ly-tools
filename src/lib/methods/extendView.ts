@@ -1,8 +1,8 @@
 /*
  * @Author: Do not edit
  * @Date: 2023-05-09 21:41:10
- * @LastEditors: LiuYu
- * @LastEditTime: 2023-05-09 23:42:59
+ * @LastEditors: Liuyu
+ * @LastEditTime: 2023-05-10 19:52:21
  * @FilePath: /ly-tools/src/lib/methods/extendView.ts
  */
 import * as vscode from 'vscode';
@@ -93,8 +93,10 @@ const extendView = async (input: MultiStepInput) => {
     placeholder: '请输入view名称',
   });
 
+  // 8.判断选择的文件 名称 地址
   const { label, detail = '' } = result;
-  // 写入地址
+
+  // 9.需要写入地址
   const destPath = join(modulesPath, `..${sep}`, 'src', detail!.split('src')[1]);
 
   // 添加组件
@@ -102,12 +104,45 @@ const extendView = async (input: MultiStepInput) => {
     const upperName = name.replace(/^\w/g, (match) => (match.toUpperCase()));
     // 1.编译ejs模板 result
     const result = await compile('vueComponent', { name, upperName, path: importDetail.split('.')[0] });
+    const isWriteDirPath = dest.match(/.*\//)![0];
     
-    // 2.写入文件的操作
+    // 2.判断文件夹是否存在
+    if (!fs.existsSync(isWriteDirPath)) {
+      fs.mkdirSync(isWriteDirPath, { recursive: true });
+    }
+    // 3.写入文件的操作
     fs.writeFileSync(dest, result);
   };
   
-  await writeFileComponent(label.split('.')[0], destPath, detail);
+  // 10.判断当前文件是否存在
+  if (!fs.existsSync(destPath)) {
+    await writeFileComponent(label.split('.')[0], destPath, detail);
+  }
+
+  // 选择的node_modules文件路径
+  const selectModulesPath  = modulesPath + sep + detail;
+
+  // 11.打开文件
+  vscode.workspace.openTextDocument(destPath).then((doc) => {
+    // 打开当前写入文件
+    vscode.window.showTextDocument(doc, vscode.ViewColumn.Active);
+
+    // 打开侧边依赖栏文件
+    vscode.workspace.openTextDocument(selectModulesPath).then(
+      (descDoc) => {
+        vscode.window.showTextDocument(
+          descDoc,
+          vscode.ViewColumn.Beside,
+          true,
+        );
+      },
+      (err) => {
+        vscode.window.showErrorMessage(
+          `侧边打开${detail}文件失败`,
+        );
+      },
+    );
+  });
 };
 
 export { extendView };
