@@ -2,23 +2,23 @@
  * @Author: Do not edit
  * @Date: 2023-05-07 23:58:43
  * @LastEditors: LiuYu
- * @LastEditTime: 2023-05-09 21:53:25
+ * @LastEditTime: 2023-05-11 23:00:48
  * @FilePath: /ly-tools/src/lib/multiStepInput.ts
  */
 import { ExtensionContext, window, QuickPickItem, Disposable, QuickInput} from 'vscode';
-import { extendView, extendComponent, extendAllComponent } from './methods';
+import { openView, extendComponent, extendAllComponent } from './methods';
 
 async function multiStepInput(context: ExtensionContext, methods: string){
   const input = new MultiStepInput();
   switch(methods){
-    case 'extendView':
-      extendView(input);
-      break;
     case 'extendComponent':
-      extendComponent();
+      extendComponent(input);
+      break;
+    case 'openView':
+      openView(input);
       break;
     case 'extendAllComponent':
-      extendAllComponent();
+      extendAllComponent(input);
       break;
     default:
       break;

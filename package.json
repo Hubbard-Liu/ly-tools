@@ -36,6 +36,24 @@
           "group": "navigation"
         }
       ]
+    },
+    "configuration": {
+      "title": "ly-tools",
+      "properties": {
+        "ly-tools.configPackagePathName": {
+          "type": "string",
+          "description": "需要从node_modules继承依赖的名称, 默认为 @zfs",
+          "default": "@zfs",
+          "maxLength": 30,
+          "scope": "window"
+        },
+        "ly-tools.configExcludePathName": {
+          "type": "array",
+          "description": "设置查找时排除的文件夹 默认为排除 ['ui', 'element-ui', 'el-bigdata-table', 'boe-ia', 'lib']",
+          "default": ["ui", "element-ui", "el-bigdata-table", "boe-ia", "lib"],
+          "scope": "window"
+        }
+      }
     }
   },
   "scripts": {
