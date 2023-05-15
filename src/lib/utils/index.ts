@@ -1,8 +1,8 @@
 /*
  * @Author: Do not edit
  * @Date: 2023-05-08 23:03:27
- * @LastEditors: LiuYu
- * @LastEditTime: 2023-05-12 01:11:34
+ * @LastEditors: Liuyu
+ * @LastEditTime: 2023-05-12 09:42:14
  * @FilePath: /ly-tools/src/lib/utils/index.ts
  */
 import * as fs from 'node:fs';
@@ -54,26 +54,6 @@ const writeFileComponent = async (name: string, dest: string, importDetail: stri
   fs.writeFileSync(dest, result);
 };
 
- /**
-  * writeFileComponent写入文件
-  * @param name 写入的文件名
-  * @param dest 写入的文件地址
-  * @param importDetail 导入的地址
-  */
- const allWriteFileComponent = async (name: string, dest: string, importDetail: string) => {
-  const upperName = name.replace(/^\w/g, (match) => (match.toUpperCase()));
-  // 1.编译ejs模板 result
-  const result = await compile('vueComponent', { name, upperName, path: importDetail.split('.')[0] });
-  
-  // 2.判断文件夹是否存在
-  // if (!fs.existsSync(dest)) {
-  //   fs.mkdirSync(dest, { recursive: true });
-  // }
-  // 3.写入文件的操作
-  fs.writeFileSync(dest, result);
-};
-
-
 /**
  * findFilesInDir递归查找文件目录
  * @param startPath 起始路径
@@ -108,7 +88,6 @@ const findFilesInDir: (startPath:string, filter: RegExp) => QuickPickItem[] | []
 
 export {
   writeFileComponent,
-  allWriteFileComponent,
   findFilesInDir,
   findDirModules,
 };

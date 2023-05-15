@@ -1,8 +1,8 @@
 /*
  * @Author: Do not edit
  * @Date: 2023-05-09 21:41:10
- * @LastEditors: LiuYu
- * @LastEditTime: 2023-05-12 01:10:39
+ * @LastEditors: Liuyu
+ * @LastEditTime: 2023-05-12 09:44:23
  * @FilePath: /ly-tools/src/lib/methods/extendAllComponent.ts
  */
 import * as vscode from 'vscode';
@@ -10,7 +10,7 @@ import type { QuickPickItem } from 'vscode';
 import * as fs from 'node:fs';
 import { sep, join ,basename} from 'node:path';
 import type { MultiStepInput } from '../multiStepInput';
-import { writeFileComponent, findFilesInDir, findDirModules ,allWriteFileComponent } from '../utils';
+import { writeFileComponent, findFilesInDir, findDirModules } from '../utils';
 import { 
   PACKAGE_PATH,
   NODE_MODULES,
@@ -99,7 +99,7 @@ const extendAllComponent = async (input: MultiStepInput) => {
   // 依赖包的路径
   const selectModulesPath = join(modulesPath, label);
 
-  const batchWriteFileComponent: (startPath:string) => any[] | [] = (startPath) => {
+  const batchWriteFileComponent: (startPath:string) => Promise<any> | [] = async (startPath) => {
     let files = fs.readdirSync(startPath);
     let result: any[] = [];
 
@@ -109,20 +109,22 @@ const extendAllComponent = async (input: MultiStepInput) => {
       
       // 判断是否vue文件
       if (filter.test(filename)) {
-        const detail = filename.match(reg1)![1];
+        const detail = filename.match(MODULES_REG)![0];
         const name = basename(filename).split('.')[0];
-        console.log('detail', detail);
-        console.log('destPath', destPath);
-        console.log('name', name);
-        allWriteFileComponent(name, destPath, detail);
+        const fileDestPath = join(destPath, name + '.vue');
+
+        if (!fs.existsSync(fileDestPath)) {
+          // 添加组件
+          await writeFileComponent(name, fileDestPath, detail);
+          result.push(fileDestPath);
+        }
       }
     }
-  
     return result;
   };
 
-  batchWriteFileComponent(selectModulesPath);
-  
+  const fileComponentList = await batchWriteFileComponent(selectModulesPath);
+   vscode.window.showInformationMessage(`一键继承成功, 共继承${fileComponentList.length}个组件`);
   // // 9.判断当前文件是否存在
   // if (!fs.existsSync(destPath)) {
   //   // 添加组件
