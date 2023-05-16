@@ -17,11 +17,11 @@
         "title": "openTools"
       },
       {
-        "command": "ly-tools.openTools2",
+        "command": "ly-tools.openView",
         "title": "view",
         "icon": {
-          "light": "src/assets/icon.svg",
-          "dark": "src/assets/icon.svg"
+          "light": "src/assets/icon.png",
+          "dark": "src/assets/icon.png"
         }
       }
     ],
@@ -35,8 +35,8 @@
     "menus": {
       "editor/title": [
         {
-          "command": "ly-tools.openTools2",
-          "alt": "ly-tools.openTools2",
+          "command": "ly-tools.openView",
+          "alt": "ly-tools.openView",
           "group": "navigation"
         }
       ]
