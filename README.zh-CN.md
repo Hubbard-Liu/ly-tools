@@ -1,8 +1,9 @@
-# How To Use
+# 如何使用
 
-- CLI: Press `ctrl+shift+f10`
+- 直接使用 `ctrl+shift+f10` 组合按键
+> 可以利用VSCODE的Keyboard shortcuts重新定义快捷键。
 
-# Features
+# 特性
 
 > 1: 继承组件或页面
 
@@ -10,11 +11,11 @@
 
 > 3: 继承目录组件
 
-# Configuration
+# 配置
 
-you can also configure. Open your user and workspace settings (File > Preferences > Settings):
+插件配置，点击 VS Code 的 `文件 > 首选项 > 设置`，打开设置面板：
 
-| name | Description | Default |
+| 名称 | 描述 | 默认值 |
 |----|----|-----|
 | `ly-tools.configPackagePathName` | 需要从node_modules继承依赖的名称） | `@zfs` |
 | `ly-tools.configExcludePathName` | 设置查找时排除的文件夹 | `["ui", "element-ui", "el-bigdata-table", "boe-ia", "lib"]` |
