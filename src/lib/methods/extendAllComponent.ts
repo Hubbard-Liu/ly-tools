@@ -2,7 +2,7 @@
  * @Author: Do not edit
  * @Date: 2023-05-09 21:41:10
  * @LastEditors: Liuyu
- * @LastEditTime: 2023-05-12 09:44:23
+ * @LastEditTime: 2023-05-16 10:20:00
  * @FilePath: /ly-tools/src/lib/methods/extendAllComponent.ts
  */
 import * as vscode from 'vscode';
@@ -10,13 +10,14 @@ import type { QuickPickItem } from 'vscode';
 import * as fs from 'node:fs';
 import { sep, join ,basename} from 'node:path';
 import type { MultiStepInput } from '../multiStepInput';
-import { writeFileComponent, findFilesInDir, findDirModules } from '../utils';
+import { writeFileComponent, findDirModules } from '../utils';
 import { 
   PACKAGE_PATH,
-  NODE_MODULES,
   EXCLUDE_PATH,
+  EXTEND_PATH,
   MODULES_REG,
   EXTENSION_NAME_REG,
+  EXTEND_CPM_PATH,
  } from '../config';
 
 const extendAllComponent = async (input: MultiStepInput) => {
@@ -95,10 +96,17 @@ const extendAllComponent = async (input: MultiStepInput) => {
   const { label } = result;
   
   // // 8.需要写入地址 /Users/mac/Documents/project/vscodePlugin/zfs-fssc-web/src
-  const destPath = join(modulesPath, `..${sep}`, 'src', label!.split('src')[1]);
+  let destPath = [modulesPath, `..${sep}`, 'src', label!.split('src')[1]];
+
+  // 判断路径是否有关键字 默认写入到components下面
+  if (label.search(EXTEND_CPM_PATH) !== -1) {
+    destPath.splice(3, 1, EXTEND_PATH);
+  }
+  const formatDestPath = join(...destPath);
   // 依赖包的路径
   const selectModulesPath = join(modulesPath, label);
 
+  // 批量写入
   const batchWriteFileComponent: (startPath:string) => Promise<any> | [] = async (startPath) => {
     let files = fs.readdirSync(startPath);
     let result: any[] = [];
@@ -111,7 +119,7 @@ const extendAllComponent = async (input: MultiStepInput) => {
       if (filter.test(filename)) {
         const detail = filename.match(MODULES_REG)![0];
         const name = basename(filename).split('.')[0];
-        const fileDestPath = join(destPath, name + '.vue');
+        const fileDestPath = join(formatDestPath, name + '.vue');
 
         if (!fs.existsSync(fileDestPath)) {
           // 添加组件
@@ -124,37 +132,11 @@ const extendAllComponent = async (input: MultiStepInput) => {
   };
 
   const fileComponentList = await batchWriteFileComponent(selectModulesPath);
-   vscode.window.showInformationMessage(`一键继承成功, 共继承${fileComponentList.length}个组件`);
-  // // 9.判断当前文件是否存在
-  // if (!fs.existsSync(destPath)) {
-  //   // 添加组件
-  //   await writeFileComponent(label.split('.')[0], destPath, detail);
-  // }
-
-  // // 10.选择的node_modules文件路径
-  // const selectModulesPath  = modulesPath + sep + detail;
-
-  // // 11.打开文件
-  // vscode.workspace.openTextDocument(destPath).then((doc) => {
-  //   // 打开当前写入文件
-  //   vscode.window.showTextDocument(doc, vscode.ViewColumn.Active);
-
-  //   // 打开侧边依赖栏文件
-  //   vscode.workspace.openTextDocument(selectModulesPath).then(
-  //     (descDoc) => {
-  //       vscode.window.showTextDocument(
-  //         descDoc,
-  //         vscode.ViewColumn.Beside,
-  //         true,
-  //       );
-  //     },
-  //     (err) => {
-  //       vscode.window.showErrorMessage(
-  //         `侧边打开${detail}文件失败`,
-  //       );
-  //     },
-  //   );
-  // });
+  if (fileComponentList?.length > 0) {
+    vscode.window.showInformationMessage(`一键继承成功, 共继承${fileComponentList.length}个组件`);
+  } else {
+    vscode.window.showErrorMessage('一键继承失败, 请检查是否已经继承过');
+  }
 };
 
 export { extendAllComponent };

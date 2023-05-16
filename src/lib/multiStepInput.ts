@@ -1,8 +1,8 @@
 /*
  * @Author: Do not edit
  * @Date: 2023-05-07 23:58:43
- * @LastEditors: LiuYu
- * @LastEditTime: 2023-05-11 23:00:48
+ * @LastEditors: Liuyu
+ * @LastEditTime: 2023-05-16 10:17:43
  * @FilePath: /ly-tools/src/lib/multiStepInput.ts
  */
 import { ExtensionContext, window, QuickPickItem, Disposable, QuickInput} from 'vscode';
@@ -62,9 +62,6 @@ class MultiStepInput {
             onChangeValue && onChangeValue(items);
           }),
 				);
-				if (this.current) {
-					this.current.dispose();
-				}
 				this.current = input;
 				this.current.show();
 			});

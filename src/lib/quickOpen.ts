@@ -1,8 +1,8 @@
 /*
  * @Author: Do not edit
  * @Date: 2023-05-07 22:02:39
- * @LastEditors: LiuYu
- * @LastEditTime: 2023-05-11 22:45:39
+ * @LastEditors: Liuyu
+ * @LastEditTime: 2023-05-16 10:47:59
  * @FilePath: /ly-tools/src/lib/quickOpen.ts
  */
 import { QuickPickItem } from 'vscode';
@@ -19,7 +19,7 @@ const quickPickItem: PickItem[] = [
   },
   {
     code: 'openView',
-    label: '2:打开页面openView',
+    label: '2:查找页面openView',
     description: '打开一个指定组件或页面',
   },
   {

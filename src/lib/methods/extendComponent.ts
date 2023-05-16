@@ -1,8 +1,8 @@
 /*
  * @Author: Do not edit
  * @Date: 2023-05-09 21:41:10
- * @LastEditors: LiuYu
- * @LastEditTime: 2023-05-12 00:15:31
+ * @LastEditors: Liuyu
+ * @LastEditTime: 2023-05-16 10:08:36
  * @FilePath: /ly-tools/src/lib/methods/extendComponent.ts
  */
 import * as vscode from 'vscode';
@@ -13,8 +13,9 @@ import type { MultiStepInput } from '../multiStepInput';
 import { writeFileComponent, findFilesInDir, findDirModules } from '../utils';
 import { 
   PACKAGE_PATH,
-  NODE_MODULES,
   EXTENSION_NAME_REG,
+  EXTEND_CPM_PATH,
+  EXTEND_PATH,
  } from '../config';
 
 const extendComponent = async (input: MultiStepInput) => {
@@ -47,7 +48,6 @@ const extendComponent = async (input: MultiStepInput) => {
     step: 1,
     totalSteps: 1,
     items,
-    // activeItems: items,
     placeholder: '请输入组件或页面名称',
   });
 
@@ -55,19 +55,25 @@ const extendComponent = async (input: MultiStepInput) => {
   const { label, detail = '' } = result;
 
   // 9.需要写入地址
-  const destPath = join(modulesPath, `..${sep}`, 'src', detail!.split('src')[1]);
+  let destPath = [modulesPath, `..${sep}`, 'src', detail!.split('src')[1]];
 
+  // 判断路径是否有关键字 默认写入到components下面
+  if (detail.search(EXTEND_CPM_PATH) !== -1) {
+    destPath.splice(3, 1, EXTEND_PATH, label);
+  }
+  const formatDestPath = join(...destPath);
+console.log(formatDestPath); 
   // 10.判断当前文件是否存在
-  if (!fs.existsSync(destPath)) {
+  if (!fs.existsSync(formatDestPath)) {
     // 添加组件
-    await writeFileComponent(label.split('.')[0], destPath, detail);
+    await writeFileComponent(label.split('.')[0], formatDestPath, detail);
   }
 
   // 选择的node_modules文件路径
   const selectModulesPath  = modulesPath + sep + detail;
 
   // 11.打开文件
-  vscode.workspace.openTextDocument(destPath).then((doc) => {
+  vscode.workspace.openTextDocument(formatDestPath).then((doc) => {
     // 打开当前写入文件
     vscode.window.showTextDocument(doc, vscode.ViewColumn.Active);
 

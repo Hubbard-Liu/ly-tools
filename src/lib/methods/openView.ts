@@ -1,8 +1,8 @@
 /*
  * @Author: Do not edit
  * @Date: 2023-05-09 21:41:10
- * @LastEditors: LiuYu
- * @LastEditTime: 2023-05-12 00:16:00
+ * @LastEditors: Liuyu
+ * @LastEditTime: 2023-05-16 10:09:41
  * @FilePath: /ly-tools/src/lib/methods/openView.ts
  */
 import * as vscode from 'vscode';
@@ -13,7 +13,6 @@ import type { MultiStepInput } from '../multiStepInput';
 import { findFilesInDir,findDirModules } from '../utils';
 import { 
   PACKAGE_PATH,
-  NODE_MODULES,
   EXTENSION_NAME_REG,
  } from '../config';
 
@@ -51,7 +50,7 @@ const openView = async (input: MultiStepInput) => {
   });
 
   // 8.判断选择的文件 名称 地址
-  const { label, detail = '' } = result;
+  const { detail = '' } = result;
 
   // 9.需要写入地址
   const destPath = join(modulesPath, `..${sep}`, 'src', detail!.split('src')[1]);

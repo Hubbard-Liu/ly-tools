@@ -2,7 +2,7 @@
  * @Author: Do not edit
  * @Date: 2023-05-08 23:03:27
  * @LastEditors: Liuyu
- * @LastEditTime: 2023-05-12 09:42:14
+ * @LastEditTime: 2023-05-16 10:27:36
  * @FilePath: /ly-tools/src/lib/utils/index.ts
  */
 import * as fs from 'node:fs';
@@ -41,6 +41,9 @@ const findDirModules: (arrPath: string[]) => string = (arrPath) => {
   * @param importDetail 导入的地址
   */
 const writeFileComponent = async (name: string, dest: string, importDetail: string) => {
+  if (name.indexOf('-') !== -1) {
+    name = name.replace(/-(\w)/g, (_, p1) => p1.toUpperCase());
+  }
   const upperName = name.replace(/^\w/g, (match) => (match.toUpperCase()));
   // 1.编译ejs模板 result
   const result = await compile('vueComponent', { name, upperName, path: importDetail.split('.')[0] });
