@@ -3,7 +3,7 @@
  * @Date: 2023-05-07 22:02:39
  * @LastEditors: Liuyu
  * @LastEditTime: 2023-05-16 10:47:59
- * @FilePath: /ly-tools/src/lib/quickOpen.ts
+ * @FilePath: /zfs-toolkit/src/lib/quickOpen.ts
  */
 import { QuickPickItem } from 'vscode';
 

@@ -3,7 +3,7 @@
  * @Date: 2023-05-09 21:41:10
  * @LastEditors: Liuyu
  * @LastEditTime: 2023-05-16 11:55:26
- * @FilePath: /ly-tools/src/lib/methods/extendAllComponent.ts
+ * @FilePath: /zfs-toolkit/src/lib/methods/extendAllComponent.ts
  */
 import * as vscode from 'vscode';
 import type { QuickPickItem } from 'vscode';

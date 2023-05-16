@@ -3,7 +3,7 @@
  * @Date: 2023-05-08 23:03:27
  * @LastEditors: Liuyu
  * @LastEditTime: 2023-05-16 10:27:36
- * @FilePath: /ly-tools/src/lib/utils/index.ts
+ * @FilePath: /zfs-toolkit/src/lib/utils/index.ts
  */
 import * as fs from 'node:fs';
 import { compile } from '../utils/compile';

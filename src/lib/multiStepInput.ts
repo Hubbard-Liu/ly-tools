@@ -3,7 +3,7 @@
  * @Date: 2023-05-07 23:58:43
  * @LastEditors: Liuyu
  * @LastEditTime: 2023-05-16 10:17:43
- * @FilePath: /ly-tools/src/lib/multiStepInput.ts
+ * @FilePath: /zfs-toolkit/src/lib/multiStepInput.ts
  */
 import { ExtensionContext, window, QuickPickItem, Disposable, QuickInput} from 'vscode';
 import { openView, extendComponent, extendAllComponent } from './methods';

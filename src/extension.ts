@@ -2,7 +2,7 @@
  * @Author: Do not edit
  * @Date: 2023-05-05 23:06:52
  * @LastEditors: Liuyu
- * @LastEditTime: 2023-05-16 11:52:11
+ * @LastEditTime: 2023-05-16 13:48:11
  * @FilePath: /ly-tools/src/extension.ts
  */
 import * as vscode from 'vscode';
@@ -14,7 +14,7 @@ import { configChange } from './lib/config';
 export function activate(context: vscode.ExtensionContext) {
 	// 插件已激活
 	configChange();
-	let disposable = vscode.commands.registerCommand('ly-tools.openTools', () => {
+	let disposable = vscode.commands.registerCommand('zfs-toolkit.openTools', () => {
 		// 启动
 		const quickPick = vscode.window.createQuickPick();
 		quickPick.items = quickPickItem;
@@ -26,7 +26,7 @@ export function activate(context: vscode.ExtensionContext) {
 		quickPick.show();
 	});
 
-	let disposable2 = vscode.commands.registerCommand('ly-tools.openView', () => {
+	let disposable2 = vscode.commands.registerCommand('zfs-toolkit.openView', () => {
 		// The code you place here will be executed every time your command is executed
 		// Display a message box to the user
 		multiStepInput(context, 'openView');

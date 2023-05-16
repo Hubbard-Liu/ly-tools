@@ -1,6 +1,6 @@
 {
-  "name": "ly-tools",
-  "displayName": "ly-tools",
+  "name": "zfs-toolkit",
+  "displayName": "VS Code plugin, In vue extends file;",
   "icon": "src/assets/logo.png",
   "description": "",
   "version": "0.0.1",
@@ -12,17 +12,17 @@
   ],
   "repository": {
     "type": "git",
-    "url": "https://github.com/Hubbard-Liu/ly-tools.git"
+    "url": "https://github.com/Hubbard-Liu/zfs-toolkit.git"
   },
   "main": "./out/extension.js",
   "contributes": {
     "commands": [
       {
-        "command": "ly-tools.openTools",
+        "command": "zfs-toolkit.openTools",
         "title": "openTools"
       },
       {
-        "command": "ly-tools.openView",
+        "command": "zfs-toolkit.openView",
         "title": "view",
         "icon": {
           "light": "src/assets/icon.png",
@@ -32,7 +32,7 @@
     ],
     "keybindings": [
       {
-        "command": "ly-tools.openTools",
+        "command": "zfs-toolkit.openTools",
         "key": "ctrl+shift+f10",
         "mac": "cmd+shift+f10"
       }
@@ -40,35 +40,35 @@
     "menus": {
       "editor/title": [
         {
-          "command": "ly-tools.openView",
-          "alt": "ly-tools.openView",
+          "command": "zfs-toolkit.openView",
+          "alt": "zfs-toolkit.openView",
           "group": "navigation"
         }
       ]
     },
     "configuration": {
-      "title": "ly-tools",
+      "title": "zfs-toolkit",
       "properties": {
-        "ly-tools.configPackagePathName": {
+        "zfs-toolkit.configPackagePathName": {
           "type": "string",
           "description": "需要从node_modules继承依赖的名称, 默认为 @zfs",
           "default": "@zfs",
           "maxLength": 30,
           "scope": "window"
         },
-        "ly-tools.configExcludePathName": {
+        "zfs-toolkit.configExcludePathName": {
           "type": "array",
           "description": "设置查找时排除的文件夹 默认为排除 ['ui', 'element-ui', 'el-bigdata-table', 'boe-ia', 'lib']",
           "default": ["ui", "element-ui", "el-bigdata-table", "boe-ia", "lib"],
           "scope": "window"
         },
-        "ly-tools.configExtendPathName": {
+        "zfs-toolkit.configExtendPathName": {
           "type": "string",
           "description": "设置继承到指定src下的目录, 例如:src/components, 默认为 components",
           "default": "components",
           "scope": "window"
         },
-        "ly-tools.configExtendComponentsPathName": {
+        "zfs-toolkit.configExtendComponentsPathName": {
           "type": "array",
           "description": "设置继承到指定目录的关键字,例如:src/components 默认为 ['ui', 'boe-core']",
           "default": ["ui", "boe-core"],

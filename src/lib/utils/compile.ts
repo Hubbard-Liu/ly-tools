@@ -3,7 +3,7 @@
  * @Date: 2023-05-09 22:21:07
  * @LastEditors: LiuYu
  * @LastEditTime: 2023-05-09 23:30:42
- * @FilePath: /ly-tools/src/lib/utils/compile.ts
+ * @FilePath: /zfs-toolkit/src/lib/utils/compile.ts
  */
 import * as ejs from 'ejs';
 import * as templates from '../templates';
