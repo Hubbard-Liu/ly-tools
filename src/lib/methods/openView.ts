@@ -2,7 +2,7 @@
  * @Author: Do not edit
  * @Date: 2023-05-09 21:41:10
  * @LastEditors: Liuyu
- * @LastEditTime: 2023-05-16 10:09:41
+ * @LastEditTime: 2023-05-16 11:55:44
  * @FilePath: /ly-tools/src/lib/methods/openView.ts
  */
 import * as vscode from 'vscode';
@@ -30,6 +30,11 @@ const openView = async (input: MultiStepInput) => {
   
   // 4.find modules path
   const modulesPath = findDirModules(pathArr);
+
+  if (!modulesPath) {
+    vscode.window.showErrorMessage('未找到node_modules文件夹');
+    return;
+  }
   
   const reg = new RegExp(EXTENSION_NAME_REG + '$');
   // 5.find package path

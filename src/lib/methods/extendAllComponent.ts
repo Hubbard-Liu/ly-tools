@@ -2,7 +2,7 @@
  * @Author: Do not edit
  * @Date: 2023-05-09 21:41:10
  * @LastEditors: Liuyu
- * @LastEditTime: 2023-05-16 10:20:00
+ * @LastEditTime: 2023-05-16 11:55:26
  * @FilePath: /ly-tools/src/lib/methods/extendAllComponent.ts
  */
 import * as vscode from 'vscode';
@@ -75,7 +75,10 @@ const extendAllComponent = async (input: MultiStepInput) => {
 
   const formatPackagePath = findFilesInDir(packagePath);
   
-  
+  if (!formatPackagePath) {
+    vscode.window.showErrorMessage('未找到node_modules文件夹');
+    return;
+  }
   // 4.find package path
   // 查找指定文件夹下的文件路径
 

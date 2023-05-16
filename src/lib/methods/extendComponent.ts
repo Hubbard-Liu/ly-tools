@@ -2,7 +2,7 @@
  * @Author: Do not edit
  * @Date: 2023-05-09 21:41:10
  * @LastEditors: Liuyu
- * @LastEditTime: 2023-05-16 10:08:36
+ * @LastEditTime: 2023-05-16 11:55:57
  * @FilePath: /ly-tools/src/lib/methods/extendComponent.ts
  */
 import * as vscode from 'vscode';
@@ -38,6 +38,11 @@ const extendComponent = async (input: MultiStepInput) => {
   // 5.find package path
   // 查找指定文件夹下的文件路径
   const fileList = findFilesInDir(modulesPath + sep + PACKAGE_PATH, reg);
+
+  if (!fileList) {
+    vscode.window.showErrorMessage('未找到node_modules文件夹');
+    return;
+  }
 
   // 6.加载全部文件目录
   let items: QuickPickItem[] = fileList;
