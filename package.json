@@ -1,7 +1,8 @@
 {
   "name": "zfs-toolkit",
   "displayName": "Zfs Toolkit",
-  "icon": "src/assets/logo.png",
+  "icon": "images/logo.png",
+  "publisher": "hubbard-Liu",
   "description": "VS Code plugin, In vue extends file",
   "version": "0.0.1",
   "engines": {
@@ -25,8 +26,8 @@
         "command": "zfs-toolkit.openView",
         "title": "view",
         "icon": {
-          "light": "src/assets/icon.png",
-          "dark": "src/assets/icon.png"
+          "light": "images/icon.png",
+          "dark": "images/icon.png"
         }
       }
     ],
