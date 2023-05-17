@@ -2,7 +2,7 @@
  * @Author: Do not edit
  * @Date: 2023-05-09 21:41:10
  * @LastEditors: Liuyu
- * @LastEditTime: 2023-05-16 11:55:26
+ * @LastEditTime: 2023-05-17 16:56:16
  * @FilePath: /zfs-toolkit/src/lib/methods/extendAllComponent.ts
  */
 import * as vscode from 'vscode';
@@ -97,9 +97,16 @@ const extendAllComponent = async (input: MultiStepInput) => {
 
   // // 7.判断选择的文件 名称 地址
   const { label } = result;
+
+  let filePath = label!.split('src')[1];
+
+  // 单独判断是否为 service 文件夹
+  if (label.search(/\/service\//g) !== -1) {
+    filePath = join('service', filePath);
+  }
   
   // // 8.需要写入地址 /Users/mac/Documents/project/vscodePlugin/zfs-fssc-web/src
-  let destPath = [modulesPath, `..${sep}`, 'src', label!.split('src')[1]];
+  let destPath = [modulesPath, `..${sep}`, 'src', filePath];
 
   // 判断路径是否有关键字 默认写入到components下面
   if (label.search(EXTEND_CPM_PATH) !== -1) {

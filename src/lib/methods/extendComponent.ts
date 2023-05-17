@@ -2,7 +2,7 @@
  * @Author: Do not edit
  * @Date: 2023-05-09 21:41:10
  * @LastEditors: Liuyu
- * @LastEditTime: 2023-05-16 11:55:57
+ * @LastEditTime: 2023-05-17 16:53:25
  * @FilePath: /zfs-toolkit/src/lib/methods/extendComponent.ts
  */
 import * as vscode from 'vscode';
@@ -58,16 +58,23 @@ const extendComponent = async (input: MultiStepInput) => {
 
   // 8.判断选择的文件 名称 地址
   const { label, detail = '' } = result;
+  
+  let filePath = detail!.split('src')[1];
 
+  // 单独判断是否为 service 文件夹
+  if (detail.search(/\/service\//g) !== -1) {
+    filePath = join('service', filePath);
+  }
+  
   // 9.需要写入地址
-  let destPath = [modulesPath, `..${sep}`, 'src', detail!.split('src')[1]];
+  let destPath = [modulesPath, `..${sep}`, 'src', filePath];
 
   // 判断路径是否有关键字 默认写入到components下面
   if (detail.search(EXTEND_CPM_PATH) !== -1) {
     destPath.splice(3, 1, EXTEND_PATH, label);
   }
   const formatDestPath = join(...destPath);
-console.log(formatDestPath); 
+  
   // 10.判断当前文件是否存在
   if (!fs.existsSync(formatDestPath)) {
     // 添加组件
