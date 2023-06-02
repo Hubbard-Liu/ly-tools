@@ -2,7 +2,7 @@
  * @Author: Do not edit
  * @Date: 2023-05-09 21:41:10
  * @LastEditors: Liuyu
- * @LastEditTime: 2023-05-16 11:55:44
+ * @LastEditTime: 2023-06-02 14:18:35
  * @FilePath: /zfs-toolkit/src/lib/methods/openView.ts
  */
 import * as vscode from 'vscode';
@@ -58,7 +58,13 @@ const openView = async (input: MultiStepInput) => {
   const { detail = '' } = result;
 
   // 9.需要写入地址
-  const destPath = join(modulesPath, `..${sep}`, 'src', detail!.split('src')[1]);
+  let destPath;
+  try {
+    destPath = join(modulesPath, `..${sep}`, 'src', detail!.split('src')[1]);
+  } catch (error) {
+    vscode.window.showErrorMessage('继承目录发送错误');
+    return;
+  }
 
   // 选择的node_modules文件路径
   const selectModulesPath  = modulesPath + sep + detail;

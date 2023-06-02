@@ -2,7 +2,7 @@
  * @Author: Do not edit
  * @Date: 2023-05-08 23:03:27
  * @LastEditors: Liuyu
- * @LastEditTime: 2023-05-16 10:27:36
+ * @LastEditTime: 2023-06-02 14:16:17
  * @FilePath: /zfs-toolkit/src/lib/utils/index.ts
  */
 import * as fs from 'node:fs';
@@ -14,6 +14,8 @@ import {
   EXCLUDE_PATH,
   MODULES_REG
  } from '../config';
+
+const excludePath = [...EXCLUDE_PATH, 'node_modules'];
 
 /**
  * findDirModules查找当前node_modules目录
@@ -72,7 +74,7 @@ const findFilesInDir: (startPath:string, filter: RegExp) => QuickPickItem[] | []
   let result: QuickPickItem[] = [];
 
   for (let i = 0; i < files.length; i++) {
-    if (EXCLUDE_PATH.includes(files[i])) {
+    if (excludePath.includes(files[i])) {
       continue;
     };
     let filename = join(startPath, files[i]);
@@ -82,7 +84,7 @@ const findFilesInDir: (startPath:string, filter: RegExp) => QuickPickItem[] | []
       result = [ ...result, ...findFilesInDir(filename, filter)];
     } else if (filter.test(filename)) {
       const detail = filename.match(MODULES_REG)![0];
-      result.push({ label: files[i], detail });
+      result.push({ label: files[i], detail: detail.substring(1, detail.length) });
     }
   }
 
