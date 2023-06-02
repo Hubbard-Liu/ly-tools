@@ -2,7 +2,7 @@
  * @Author: Do not edit
  * @Date: 2023-05-09 21:41:10
  * @LastEditors: Liuyu
- * @LastEditTime: 2023-05-17 16:56:16
+ * @LastEditTime: 2023-06-02 16:56:04
  * @FilePath: /zfs-toolkit/src/lib/methods/extendAllComponent.ts
  */
 import * as vscode from 'vscode';
@@ -19,6 +19,7 @@ import {
   EXTENSION_NAME_REG,
   EXTEND_CPM_PATH,
  } from '../config';
+ const isMac = process.platform === 'darwin';
 
 const extendAllComponent = async (input: MultiStepInput) => {
   // 1.fsPath
@@ -38,7 +39,7 @@ const extendAllComponent = async (input: MultiStepInput) => {
   // @zfs下的路径
   const packagePath = join(modulesPath, PACKAGE_PATH);
   const filter = new RegExp(EXTENSION_NAME_REG + '$');
-  const reg1 = new RegExp(`(${PACKAGE_PATH}.*)\/`);
+  const reg1 = isMac ? new RegExp(`(${PACKAGE_PATH}.*)\/`) : new RegExp(`(${PACKAGE_PATH}.*)`);
 
   const findFilesInDir: (startPath:string) => any[] | [] = (startPath) => {
     if (!fs.existsSync(startPath)) {
@@ -64,8 +65,15 @@ const extendAllComponent = async (input: MultiStepInput) => {
         result = [ ...result, ...findFilesInDir(filename)];
       } else if (filter.test(filename)) {
         const detail = filename.match(reg1)![1];
-        if (!result.includes(detail)){
-          result.push(detail);
+        if (isMac) {
+          if (!result.includes(detail)){
+            result.push(detail);
+          }
+        } else {
+          const formatDetail = detail.replace(/[^\\/]*$/, () => (''));
+          if (!result.includes(formatDetail)){
+            result.push(formatDetail);
+          }
         }
       }
     }
@@ -133,7 +141,7 @@ const extendAllComponent = async (input: MultiStepInput) => {
 
         if (!fs.existsSync(fileDestPath)) {
           // 添加组件
-          await writeFileComponent(name, fileDestPath, detail);
+          await writeFileComponent(name, fileDestPath, detail.substring(1, detail.length));
           result.push(fileDestPath);
         }
       }

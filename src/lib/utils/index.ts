@@ -2,7 +2,7 @@
  * @Author: Do not edit
  * @Date: 2023-05-08 23:03:27
  * @LastEditors: Liuyu
- * @LastEditTime: 2023-06-02 14:16:17
+ * @LastEditTime: 2023-06-02 15:25:04
  * @FilePath: /zfs-toolkit/src/lib/utils/index.ts
  */
 import * as fs from 'node:fs';
@@ -16,6 +16,7 @@ import {
  } from '../config';
 
 const excludePath = [...EXCLUDE_PATH, 'node_modules'];
+const isMac = process.platform === 'darwin';
 
 /**
  * findDirModules查找当前node_modules目录
@@ -49,8 +50,8 @@ const writeFileComponent = async (name: string, dest: string, importDetail: stri
   const upperName = name.replace(/^\w/g, (match) => (match.toUpperCase()));
   // 1.编译ejs模板 result
   const result = await compile('vueComponent', { name, upperName, path: importDetail.split('.')[0] });
-  const isWriteDirPath = dest.match(/.*\//)![0];
-  
+  const isWriteDirPath = isMac ? dest.match(/.*\//)![0] : dest.match(/.*\\/)![0];
+
   // 2.判断文件夹是否存在
   if (!fs.existsSync(isWriteDirPath)) {
     fs.mkdirSync(isWriteDirPath, { recursive: true });

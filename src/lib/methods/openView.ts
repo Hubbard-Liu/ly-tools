@@ -2,7 +2,7 @@
  * @Author: Do not edit
  * @Date: 2023-05-09 21:41:10
  * @LastEditors: Liuyu
- * @LastEditTime: 2023-06-02 14:18:35
+ * @LastEditTime: 2023-06-02 14:38:53
  * @FilePath: /zfs-toolkit/src/lib/methods/openView.ts
  */
 import * as vscode from 'vscode';
@@ -39,7 +39,13 @@ const openView = async (input: MultiStepInput) => {
   const reg = new RegExp(EXTENSION_NAME_REG + '$');
   // 5.find package path
   // 查找指定文件夹下的文件路径
-  const fileList = findFilesInDir(modulesPath + sep + PACKAGE_PATH, reg);
+  let fileList: QuickPickItem[] = [];
+  try {
+    fileList = findFilesInDir(modulesPath + sep + PACKAGE_PATH, reg);
+  } catch (error) {
+    vscode.window.showErrorMessage('查找文件夹错误');
+    return;
+  }
   
   // 6.加载全部文件目录
   let items: QuickPickItem[] = fileList;
@@ -58,13 +64,7 @@ const openView = async (input: MultiStepInput) => {
   const { detail = '' } = result;
 
   // 9.需要写入地址
-  let destPath;
-  try {
-    destPath = join(modulesPath, `..${sep}`, 'src', detail!.split('src')[1]);
-  } catch (error) {
-    vscode.window.showErrorMessage('继承目录发送错误');
-    return;
-  }
+  const destPath = join(modulesPath, `..${sep}`, 'src', detail!.split('src')[1]);
 
   // 选择的node_modules文件路径
   const selectModulesPath  = modulesPath + sep + detail;
