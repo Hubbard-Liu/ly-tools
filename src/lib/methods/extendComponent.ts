@@ -2,7 +2,7 @@
  * @Author: Do not edit
  * @Date: 2023-05-09 21:41:10
  * @LastEditors: Liuyu
- * @LastEditTime: 2023-05-17 16:53:25
+ * @LastEditTime: 2023-06-07 16:16:03
  * @FilePath: /zfs-toolkit/src/lib/methods/extendComponent.ts
  */
 import * as vscode from 'vscode';
@@ -33,6 +33,7 @@ const extendComponent = async (input: MultiStepInput) => {
   // 3.find node_modules dir
   // 4.find modules path
   const modulesPath = findDirModules(pathArr);
+  console.log(modulesPath);
   
   const reg = new RegExp(EXTENSION_NAME_REG + '$');
   // 5.find package path
@@ -62,7 +63,7 @@ const extendComponent = async (input: MultiStepInput) => {
   let filePath = detail!.split('src')[1];
 
   // 单独判断是否为 service 文件夹
-  if (detail.search(/\/service\//g) !== -1) {
+  if (detail.search(/service/g) !== -1) {
     filePath = join('service', filePath);
   }
   

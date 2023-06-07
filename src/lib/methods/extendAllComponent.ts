@@ -2,7 +2,7 @@
  * @Author: Do not edit
  * @Date: 2023-05-09 21:41:10
  * @LastEditors: Liuyu
- * @LastEditTime: 2023-06-02 16:56:04
+ * @LastEditTime: 2023-06-07 15:20:19
  * @FilePath: /zfs-toolkit/src/lib/methods/extendAllComponent.ts
  */
 import * as vscode from 'vscode';
@@ -109,7 +109,7 @@ const extendAllComponent = async (input: MultiStepInput) => {
   let filePath = label!.split('src')[1];
 
   // 单独判断是否为 service 文件夹
-  if (label.search(/\/service\//g) !== -1) {
+  if (label.search(/service/g) !== -1) {
     filePath = join('service', filePath);
   }
   

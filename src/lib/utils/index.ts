@@ -2,7 +2,7 @@
  * @Author: Do not edit
  * @Date: 2023-05-08 23:03:27
  * @LastEditors: Liuyu
- * @LastEditTime: 2023-06-02 15:25:04
+ * @LastEditTime: 2023-06-07 16:09:34
  * @FilePath: /zfs-toolkit/src/lib/utils/index.ts
  */
 import * as fs from 'node:fs';
@@ -49,7 +49,8 @@ const writeFileComponent = async (name: string, dest: string, importDetail: stri
   }
   const upperName = name.replace(/^\w/g, (match) => (match.toUpperCase()));
   // 1.编译ejs模板 result
-  const result = await compile('vueComponent', { name, upperName, path: importDetail.split('.')[0] });
+  const importDetailPath = importDetail.split('.')[0].replace(/\\/g, '/');;
+  const result = await compile('vueComponent', { name, upperName, path: importDetailPath });
   const isWriteDirPath = isMac ? dest.match(/.*\//)![0] : dest.match(/.*\\/)![0];
 
   // 2.判断文件夹是否存在
