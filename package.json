@@ -4,7 +4,7 @@
   "icon": "images/logo.png",
   "publisher": "hubbard-Liu",
   "description": "Tools for extends Vue.js file",
-  "version": "0.0.6",
+  "version": "0.0.7",
   "engines": {
     "vscode": "^1.78.0"
   },
@@ -51,10 +51,9 @@
       "title": "zfs-toolkit",
       "properties": {
         "zfs-toolkit.configPackagePathName": {
-          "type": "string",
+          "type": "array",
           "description": "需要从node_modules继承依赖的名称, 默认为 @zfs",
-          "default": "@zfs",
-          "maxLength": 30,
+          "default": ["@zfs", "@zfs/web","zfs-common", "zfs-service"],
           "scope": "window"
         },
         "zfs-toolkit.configExcludePathName": {

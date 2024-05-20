@@ -1,10 +1,3 @@
-/*
- * @Author: Do not edit
- * @Date: 2023-05-09 21:41:10
- * @LastEditors: Liuyu
- * @LastEditTime: 2023-06-07 15:20:19
- * @FilePath: /zfs-toolkit/src/lib/methods/extendAllComponent.ts
- */
 import * as vscode from 'vscode';
 import type { QuickPickItem } from 'vscode';
 import * as fs from 'node:fs';
@@ -21,6 +14,10 @@ import {
  } from '../config';
  const isMac = process.platform === 'darwin';
 
+const showErrorMessage = (message: string) => {
+  vscode.window.showErrorMessage(message);
+};
+
 const extendAllComponent = async (input: MultiStepInput) => {
   // 1.fsPath
   const document = vscode.window.activeTextEditor?.document;
@@ -29,7 +26,7 @@ const extendAllComponent = async (input: MultiStepInput) => {
   // 2.path separator
   const pathArr: string[] = fsPath?.split(sep) ?? [];
   if (pathArr?.length === 0) {
-    vscode.window.showErrorMessage('请进入一个文件');
+    showErrorMessage('请进入一个文件');
     return;
   };
 
@@ -37,61 +34,89 @@ const extendAllComponent = async (input: MultiStepInput) => {
   const modulesPath = findDirModules(pathArr);
 
   // @zfs下的路径
-  const packagePath = join(modulesPath, PACKAGE_PATH);
-  const filter = new RegExp(EXTENSION_NAME_REG + '$');
-  const reg1 = isMac ? new RegExp(`(${PACKAGE_PATH}.*)\/`) : new RegExp(`(${PACKAGE_PATH}.*)`);
-
-  const findFilesInDir: (startPath:string) => any[] | [] = (startPath) => {
-    if (!fs.existsSync(startPath)) {
-      return [];
+  const existingPaths: string[] = [];
+  for (const subPath of PACKAGE_PATH) {
+    const fullPath = join(modulesPath, subPath);
+    if (fs.existsSync(fullPath)) {
+      existingPaths.push(subPath);
     }
-  
-    let files = fs.readdirSync(startPath);
-    let result: any[] = [];
-  
-    for (let i = 0; i < files.length; i++) {
-      // 排除
-      if (EXCLUDE_PATH.includes(files[i])) {
-        continue;
-      };
-      // 拼接文件路径
-      let filename = join(startPath, files[i]);
+  }
 
-      // 获取指定路径的文件或目录的状态信息
-      let stat = fs.lstatSync(filename);
-      
-      // 判断是否为文件夹
-      if (stat.isDirectory()) {
-        result = [ ...result, ...findFilesInDir(filename)];
-      } else if (filter.test(filename)) {
-        const detail = filename.match(reg1)![1];
-        if (isMac) {
-          if (!result.includes(detail)){
-            result.push(detail);
-          }
-        } else {
-          const formatDetail = detail.replace(/[^\\/]*$/, () => (''));
-          if (!result.includes(formatDetail)){
-            result.push(formatDetail);
+  // 如果存在的子路径数量为0，则显示错误消息并返回
+  if (existingPaths.length === 0) {
+    showErrorMessage('未找到指定的node_modules文件夹文件');
+    return;
+  }
+
+  const filter = new RegExp(EXTENSION_NAME_REG + '$');
+
+  // 循环查找文件夹下的文件
+  const formatPackagePaths: string[] = [];
+  for (const subPath of existingPaths) {
+    const packagePath = join(modulesPath, subPath);
+    const reg1 = isMac ? new RegExp(`(${subPath}.*)\/`) : new RegExp(`(${subPath}.*)`);
+
+    const findFilesInDir: (startPath:string) => any[] | [] = (startPath) => {
+      if (!fs.existsSync(startPath)) {
+        return [];
+      }
+    
+      let files = fs.readdirSync(startPath);
+      let result: any[] = [];
+    
+      for (let i = 0; i < files.length; i++) {
+        // 排除
+        if (EXCLUDE_PATH.includes(files[i])) {
+          continue;
+        };
+        // 拼接文件路径
+        let filename = join(startPath, files[i]);
+  
+        // 获取指定路径的文件或目录的状态信息
+        let stat = fs.lstatSync(filename);
+        
+        // 判断是否为文件夹
+        if (stat.isDirectory()) {
+          result = [ ...result, ...findFilesInDir(filename)];
+        } else if (filter.test(filename)) {
+          const detail = filename.match(reg1)![1];
+          if (isMac) {
+            if (!result.includes(detail)){
+              result.push(detail);
+            }
+          } else {
+            const formatDetail = detail.replace(/[^\\/]*$/, () => (''));
+            if (!result.includes(formatDetail)){
+              result.push(formatDetail);
+            }
           }
         }
       }
-    }
-  
-    return result;
-  };
+    
+      return result;
+    };
 
-  const formatPackagePath = findFilesInDir(packagePath);
-  
-  if (!formatPackagePath) {
-    vscode.window.showErrorMessage('未找到node_modules文件夹');
-    return;
+    const formatPackagePath = findFilesInDir(packagePath);
+    if (formatPackagePath) {
+      formatPackagePaths.push(...formatPackagePath);
+    }
   }
+
+  // const packagePath = join(modulesPath, existingPaths[0]);
+  // const filter = new RegExp(EXTENSION_NAME_REG + '$');
+  // const reg1 = isMac ? new RegExp(`(${existingPaths[0]}.*)\/`) : new RegExp(`(${existingPaths[0]}.*)`);
+
+  // const formatPackagePath = findFilesInDir(packagePath);
+  
+  // if (!formatPackagePath) {
+  //   showErrorMessage('未找到node_modules文件夹');
+  //   return;
+  // }
   // 4.find package path
   // 查找指定文件夹下的文件路径
 
   // 5.加载全部文件目录
-  let items: QuickPickItem[] = formatPackagePath.map(path => ({label:path}));
+  let items: QuickPickItem[] = formatPackagePaths.map(path => ({label:path}));
 
   // 6.显示加载全部文件
   const result = await input.showQuickPick({
@@ -153,7 +178,7 @@ const extendAllComponent = async (input: MultiStepInput) => {
   if (fileComponentList?.length > 0) {
     vscode.window.showInformationMessage(`一键继承成功, 共继承${fileComponentList.length}个组件`);
   } else {
-    vscode.window.showErrorMessage('一键继承失败, 请检查是否已经继承过');
+    showErrorMessage('一键继承失败, 请检查是否已经继承过');
   }
 };
 

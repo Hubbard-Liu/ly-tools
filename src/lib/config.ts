@@ -7,7 +7,7 @@
  */
 import * as vscode from 'vscode';
 
-let PACKAGE_PATH: string = vscode.workspace.getConfiguration().get('zfs-toolkit.configPackagePathName') || '@zfs';
+let PACKAGE_PATH: string[] = vscode.workspace.getConfiguration().get('zfs-toolkit.configPackagePathName') || ['@zfs', '@zfs/web'];
 let EXTEND_PATH: string = vscode.workspace.getConfiguration().get('zfs-toolkit.configExtendPathName') || 'components';
 let EXCLUDE_PATH: string[] = vscode.workspace.getConfiguration().get('zfs-toolkit.configExcludePathName') || ["ui", "element-ui", "el-bigdata-table", "boe-ia", "lib"];
 let extendComponentsPath: string[] = vscode.workspace.getConfiguration().get('zfs-toolkit.configExtendComponentsPathName') || ["ui", "boe-core"];
@@ -19,7 +19,7 @@ let EXTEND_CPM_PATH = new RegExp(extendComponentsPath.map(reg => `(\/${reg}\/)`)
 const configChange = () => {
   // 监听配置文件变化
   vscode.workspace.onDidChangeConfiguration((e) => {
-		PACKAGE_PATH = vscode.workspace.getConfiguration().get('zfs-toolkit.configPackagePathName') || '@zfs';
+		PACKAGE_PATH = vscode.workspace.getConfiguration().get('zfs-toolkit.configPackagePathName') || ['@zfs', '@zfs/web'];
     EXCLUDE_PATH = vscode.workspace.getConfiguration().get('zfs-toolkit.configExcludePathName') || ["ui", "element-ui", "el-bigdata-table", "boe-ia", "lib"];
     EXTEND_PATH = vscode.workspace.getConfiguration().get('zfs-toolkit.configExtendPathName') || 'components';
     extendComponentsPath = vscode.workspace.getConfiguration().get('zfs-toolkit.configExtendComponentsPathName') || ["ui", "boe-core"];

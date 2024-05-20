@@ -16,6 +16,10 @@ import {
   EXTENSION_NAME_REG,
  } from '../config';
 
+const showErrorMessage = (message: string) => {
+  vscode.window.showErrorMessage(message);
+};
+
 const openView = async (input: MultiStepInput) => {
   // 1.fsPath
   const document = vscode.window.activeTextEditor?.document;
@@ -24,31 +28,40 @@ const openView = async (input: MultiStepInput) => {
   // 2.path separator
   const pathArr: string[] = fsPath?.split(sep) ?? [];
   if (pathArr?.length === 0) {
-    vscode.window.showErrorMessage('请进入一个文件');
+    showErrorMessage('请进入一个文件');
     return;
   };
   
-  // 4.find modules path
-  const modulesPath = findDirModules(pathArr);
+    // 3.find modules path
+    const modulesPath = findDirModules(pathArr);
 
-  if (!modulesPath) {
-    vscode.window.showErrorMessage('未找到node_modules文件夹');
-    return;
-  }
+    // 4.find node_modules dir
+     // 存储存在的子路径
+     const existingPaths: string[] = [];
+     for (const subPath of PACKAGE_PATH) {
+       const fullPath = join(modulesPath, subPath);
+       if (fs.existsSync(fullPath)) {
+         existingPaths.push(fullPath);
+       }
+     }
+   
+     // 如果存在的子路径数量为0，则显示错误消息并返回
+     if (existingPaths.length === 0) {
+       showErrorMessage('未找到指定的node_modules文件夹文件');
+       return;
+     }
+    
+    const reg = new RegExp(EXTENSION_NAME_REG + '$');
   
-  const reg = new RegExp(EXTENSION_NAME_REG + '$');
-  // 5.find package path
-  // 查找指定文件夹下的文件路径
-  let fileList: QuickPickItem[] = [];
-  try {
-    fileList = findFilesInDir(modulesPath + sep + PACKAGE_PATH, reg);
-  } catch (error) {
-    vscode.window.showErrorMessage('查找文件夹错误');
-    return;
-  }
+    // 6.加载全部文件目录
+    let items: QuickPickItem[] = [];
   
-  // 6.加载全部文件目录
-  let items: QuickPickItem[] = fileList;
+    for (const path of existingPaths) {
+      const fileList = findFilesInDir(path, reg);
+      if (fileList) {
+        items = [...items, ...fileList];
+      }
+    }
 
   // 7.显示加载全部文件
   const result = await input.showQuickPick({
@@ -88,7 +101,7 @@ const openView = async (input: MultiStepInput) => {
       );
     },
     (err) => {
-      vscode.window.showErrorMessage(
+      showErrorMessage(
         `侧边打开${detail}文件失败`,
       );
     },
