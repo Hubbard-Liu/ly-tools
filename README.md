@@ -21,3 +21,4 @@
 | `zfs-toolkit.configExcludePathName` | 设置查找时排除的文件夹 | `["ui", "element-ui", "el-bigdata-table", "boe-ia", "lib"]` |
 | `zfs-toolkit.configExtendPathName` | 设置继承到指定src下的目录 | `components` |
 | `zfs-toolkit.configExtendComponentsPathName` | 设置继承到指定目录的关键字 | `["ui", "boe-core"]` |
+| `zfs-toolkit.configExtendIncludePathName` | 设置组件路径继承至src/service下的目录,例如:src/service | `["ui", "boe-core"]` |
