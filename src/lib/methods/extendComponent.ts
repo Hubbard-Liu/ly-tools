@@ -3,17 +3,20 @@ import type { QuickPickItem } from 'vscode';
 import * as fs from 'node:fs';
 import { sep, join } from 'node:path';
 import type { MultiStepInput } from '../multiStepInput';
-import { writeFileComponent, findFilesInDir, findDirModules } from '../utils';
+import { writeFileComponent, findFilesInDir, findDirModules,arrayToRegex } from '../utils';
 import { 
   PACKAGE_PATH,
   EXTENSION_NAME_REG,
   EXTEND_CPM_PATH,
   EXTEND_PATH,
+  EXTEND_SERVICE_PATH
  } from '../config';
 
 const showErrorMessage = (message: string) => {
   vscode.window.showErrorMessage(message);
 };
+
+const regExtendService = arrayToRegex(EXTEND_SERVICE_PATH);
 
 const extendComponent = async (input: MultiStepInput) => {
   // 1.fsPath
@@ -73,7 +76,7 @@ const extendComponent = async (input: MultiStepInput) => {
   let filePath = detail!.split('src')[1];
 
   // 单独判断是否为 service 文件夹
-  if (detail.search(/service/g) !== -1) {
+  if (detail.search(/service/g) !== -1 || detail.search(regExtendService) !== -1) {
     filePath = join('service', filePath);
   }
   

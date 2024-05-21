@@ -93,8 +93,29 @@ const findFilesInDir: (startPath:string, filter: RegExp) => QuickPickItem[] | []
   return result;
 };
 
+/**
+ * 转换为正则目录
+ * @param arr 
+ * @returns regex
+ */
+const arrayToRegex = (arr: string[]) => {
+  if (!Array.isArray(arr) || arr.length === 0) {
+      throw new Error("Input must be a non-empty array");
+  }
+
+  // 将数组中的每个元素转义，以便在正则表达式中安全使用
+  const escapedArray = arr.map(item => item.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'));
+  
+  // 使用 | 符号将所有元素连接起来
+  const regexPattern = escapedArray.join('|');
+  
+  // 创建正则表达式对象，使用 new RegExp() 可以动态创建正则表达式
+  return new RegExp(`(${regexPattern})`);
+};
+
 export {
   writeFileComponent,
   findFilesInDir,
   findDirModules,
+  arrayToRegex
 };

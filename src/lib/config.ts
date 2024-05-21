@@ -10,11 +10,12 @@ import * as vscode from 'vscode';
 let PACKAGE_PATH: string[] = vscode.workspace.getConfiguration().get('zfs-toolkit.configPackagePathName') || ['@zfs', '@zfs/web'];
 let EXTEND_PATH: string = vscode.workspace.getConfiguration().get('zfs-toolkit.configExtendPathName') || 'components';
 let EXCLUDE_PATH: string[] = vscode.workspace.getConfiguration().get('zfs-toolkit.configExcludePathName') || ["ui", "element-ui", "el-bigdata-table", "boe-ia", "lib"];
-let extendComponentsPath: string[] = vscode.workspace.getConfiguration().get('zfs-toolkit.configExtendComponentsPathName') || ["ui", "boe-core"];
+let EXCLUDE_COMPONENTS_PATH: string[] = vscode.workspace.getConfiguration().get('zfs-toolkit.configExtendComponentsPathName') || ["ui", "boe-core"];
+let EXTEND_SERVICE_PATH: string[] = vscode.workspace.getConfiguration().get('zfs-toolkit.configExtendIncludePathName') || ["@zfsweb"];
 const NODE_MODULES = 'node_modules';
 const EXTENSION_NAME_REG = '.vue';
 const MODULES_REG = /(?<=(node_modules))(\D|\w|\/)*/g;
-let EXTEND_CPM_PATH = new RegExp(extendComponentsPath.map(reg => `(\/${reg}\/)`).join('|'), 'g');
+let EXTEND_CPM_PATH = new RegExp(EXCLUDE_COMPONENTS_PATH.map(reg => `(\/${reg}\/)`).join('|'), 'g');
 
 const configChange = () => {
   // 监听配置文件变化
@@ -22,8 +23,9 @@ const configChange = () => {
 		PACKAGE_PATH = vscode.workspace.getConfiguration().get('zfs-toolkit.configPackagePathName') || ['@zfs', '@zfs/web'];
     EXCLUDE_PATH = vscode.workspace.getConfiguration().get('zfs-toolkit.configExcludePathName') || ["ui", "element-ui", "el-bigdata-table", "boe-ia", "lib"];
     EXTEND_PATH = vscode.workspace.getConfiguration().get('zfs-toolkit.configExtendPathName') || 'components';
-    extendComponentsPath = vscode.workspace.getConfiguration().get('zfs-toolkit.configExtendComponentsPathName') || ["ui", "boe-core"];
-    EXTEND_CPM_PATH = new RegExp(extendComponentsPath.map(reg => `(\/${reg}\/)`).join('|'), 'g');
+    EXCLUDE_COMPONENTS_PATH = vscode.workspace.getConfiguration().get('zfs-toolkit.configExtendComponentsPathName') || ["ui", "boe-core"];
+    EXTEND_SERVICE_PATH = vscode.workspace.getConfiguration().get('zfs-toolkit.configExtendIncludePathName') || ["@zfsweb"];
+    EXTEND_CPM_PATH = new RegExp(EXCLUDE_COMPONENTS_PATH.map(reg => `(\/${reg}\/)`).join('|'), 'g');
 	});
 };
 
@@ -35,5 +37,6 @@ export {
   MODULES_REG,
   EXTEND_PATH,
   EXTEND_CPM_PATH,
+  EXTEND_SERVICE_PATH,
   configChange
 };

@@ -3,7 +3,7 @@ import type { QuickPickItem } from 'vscode';
 import * as fs from 'node:fs';
 import { sep, join ,basename} from 'node:path';
 import type { MultiStepInput } from '../multiStepInput';
-import { writeFileComponent, findDirModules } from '../utils';
+import { writeFileComponent, findDirModules,arrayToRegex } from '../utils';
 import { 
   PACKAGE_PATH,
   EXCLUDE_PATH,
@@ -11,12 +11,15 @@ import {
   MODULES_REG,
   EXTENSION_NAME_REG,
   EXTEND_CPM_PATH,
+  EXTEND_SERVICE_PATH,
  } from '../config';
  const isMac = process.platform === 'darwin';
 
 const showErrorMessage = (message: string) => {
   vscode.window.showErrorMessage(message);
 };
+
+const regExtendService = arrayToRegex(EXTEND_SERVICE_PATH);
 
 const extendAllComponent = async (input: MultiStepInput) => {
   // 1.fsPath
@@ -134,7 +137,7 @@ const extendAllComponent = async (input: MultiStepInput) => {
   let filePath = label!.split('src')[1];
 
   // 单独判断是否为 service 文件夹
-  if (label.search(/service/g) !== -1) {
+  if (label.search(/service/g) !== -1 || label.search(regExtendService) !== -1) {
     filePath = join('service', filePath);
   }
   

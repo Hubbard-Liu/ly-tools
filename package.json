@@ -73,6 +73,12 @@
           "description": "设置继承到指定目录的关键字,例如:src/components 默认为 ['ui', 'boe-core']",
           "default": ["ui", "boe-core"],
           "scope": "window"
+        },
+        "zfs-toolkit.configExtendIncludePathName": {
+          "type": "array",
+          "description": "设置组件路径继承至src/service下的目录,例如:src/service 默认为 ['@zfsweb']",
+          "default": ["@zfsweb"],
+          "scope": "window"
         }
       }
     }
