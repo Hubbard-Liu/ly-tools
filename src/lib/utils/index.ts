@@ -80,7 +80,7 @@ const findFilesInDir: (startPath:string, filter: RegExp) => QuickPickItem[] | []
       continue;
     };
     let filename = join(startPath, files[i]);
-    let stat = fs.lstatSync(filename);
+    let stat = fs.statSync(filename);
 
     if (stat.isDirectory()) {
       result = [ ...result, ...findFilesInDir(filename, filter)];
